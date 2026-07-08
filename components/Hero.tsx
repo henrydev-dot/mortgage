@@ -49,6 +49,21 @@ export default function Hero() {
     <section className="relative flex min-h-screen flex-col overflow-hidden pt-16">
       <PixelGrid className="absolute inset-0 h-full w-full" />
 
+      {/* Readability shields: calm the grid behind the header and the copy */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-32"
+        style={{ background: "linear-gradient(rgba(255,255,255,0.9), transparent)" }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-y-0 left-0 w-full lg:w-[58%]"
+        style={{
+          background:
+            "linear-gradient(90deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.55) 60%, transparent 100%)",
+        }}
+      />
+
       {/* Single allowed gradient: subtle compass radial glow behind the headline */}
       <div
         aria-hidden
@@ -108,7 +123,7 @@ export default function Hero() {
                 animate: { opacity: 1, y: 0 },
                 transition: { duration: 0.5, delay: 0.28 },
               })}
-          className="mx-auto w-full min-w-0 max-w-[480px] lg:mx-0 lg:justify-self-end"
+          className="mx-auto w-full min-w-0 max-w-[560px] lg:mx-0 lg:justify-self-end"
         >
           <TerminalFeed />
         </motion.div>
