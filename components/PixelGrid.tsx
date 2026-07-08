@@ -8,13 +8,13 @@ import { useEffect, useRef } from "react";
  * toward compass blue with soft falloff, easing back when the cursor
  * leaves. Static grid when prefers-reduced-motion.
  */
-const CELL = 7; // square size, px
-const GAP = 28; // grid spacing, px
-const RADIUS = 180; // cursor influence radius, px
+const CELL = 3.5; // square size, px — fine dots, not chunky blocks
+const GAP = 26; // grid spacing, px
+const RADIUS = 150; // cursor influence radius, px
 const EASE_RETURN = 0.08; // ease-out factor per frame
-const WAVE_SPEED = 340; // px per second
+const WAVE_SPEED = 320; // px per second
 const WAVE_BAND = 70; // thickness of the expanding ring
-const WAVE_EVERY = 6500; // ms between autonomous pulses
+const WAVE_EVERY = 7000; // ms between autonomous pulses
 
 // --grid-line and --compass-blue, pre-split for cheap per-frame lerp
 const BASE_RGB = [231, 233, 237];
@@ -73,7 +73,7 @@ export default function PixelGrid({ className }: { className?: string }) {
 
     const drawStatic = () => {
       ctx.clearRect(0, 0, width, height);
-      ctx.fillStyle = `rgba(${BASE_RGB.join(",")}, 0.9)`;
+      ctx.fillStyle = `rgba(${BASE_RGB.join(",")}, 0.55)`;
       for (const c of cells) {
         ctx.fillRect(c.x - CELL / 2, c.y - CELL / 2, CELL, CELL);
       }
@@ -102,17 +102,17 @@ export default function PixelGrid({ className }: { className?: string }) {
           const wdy = c.y - wave.y;
           const wdist = Math.sqrt(wdx * wdx + wdy * wdy);
           const ring = 1 - Math.abs(wdist - wave.r) / WAVE_BAND;
-          if (ring > 0) target = Math.max(target, ring * 0.65);
+          if (ring > 0) target = Math.max(target, ring * 0.45);
         }
         // Snap up quickly, ease back out slowly
         c.t += (target - c.t) * (target > c.t ? 0.35 : EASE_RETURN);
 
         const t = c.t;
-        const size = CELL + t * 6;
+        const size = CELL + t * 2.5;
         const r = BASE_RGB[0] + (ACTIVE_RGB[0] - BASE_RGB[0]) * t;
         const g = BASE_RGB[1] + (ACTIVE_RGB[1] - BASE_RGB[1]) * t;
         const b = BASE_RGB[2] + (ACTIVE_RGB[2] - BASE_RGB[2]) * t;
-        ctx.fillStyle = `rgba(${r | 0},${g | 0},${b | 0},${0.9})`;
+        ctx.fillStyle = `rgba(${r | 0},${g | 0},${b | 0},${0.55 + t * 0.25})`;
         ctx.fillRect(c.x - size / 2, c.y - size / 2, size, size);
       }
       rafId = requestAnimationFrame(frame);
