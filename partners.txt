@@ -1,0 +1,11 @@
+/Users/mustocode/Downloads/1_Base Brand Assets/Basemark/Base_basemark_blue.png /Users/mustocode/Downloads/1_Base Brand Assets/Basemark/Base_basemark_black.png /Users/mustocode/Downloads/1_Base Brand Assets/Basemark/Base_basemark_black.svg /Users/mustocode/Downloads/1_Base Brand Assets/Basemark/Base_basemark_blue.svg /Users/mustocode/Downloads/1_Base Brand Assets/Basemark/Base_basemark_white.png /Users/mustocode/Downloads/1_Base Brand Assets/Basemark/Base_basemark_white.svg
+https://www.base.org/images/logos/chain-ecosystem/invert/alchemy.svg
+https://www.base.org/images/logos/chain-ecosystem/invert/chainlink.svg
+https://www.base.org/images/logos/chain-ecosystem/invert/crossmint.svg
+https://www.base.org/images/logos/chain-ecosystem/invert/stripe.svg
+https://www.base.org/images/logos/chain-ecosystem/invert/layerzero.svg
+https://www.base.org/images/logos/chain-ecosystem/invert/wormhole.svg
+https://www.base.org/images/logos/chain-ecosystem/invert/0x.svg
+https://www.base.org/images/logos/chain-ecosystem/invert/aave.svg
+https://www.base.org/images/logos/chain-ecosystem/invert/morpho.svg
+https://www.base.org/images/logos/chain-ecosystem/invert/phantom.svgca
