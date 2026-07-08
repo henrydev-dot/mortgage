@@ -40,8 +40,14 @@ export default function WhyUs() {
 
         <div className="mt-14 grid divide-y divide-grid border-y border-grid lg:grid-cols-3 lg:divide-x lg:divide-y-0">
           {pillars.map((p, i) => (
-            <Reveal key={p.title} index={i} className="h-full">
-              <div className="flex h-full flex-col py-10 lg:px-10 lg:first:pl-0">
+            // Padding lives on the Reveal (the grid child), so `first:`
+            // targets the actual first column instead of every inner div
+            <Reveal
+              key={p.title}
+              index={i}
+              className="h-full py-10 lg:px-10 lg:first:pl-0 lg:last:pr-0"
+            >
+              <div className="flex h-full flex-col">
                 <p.icon size={26} strokeWidth={1.25} className="text-compass" />
                 <h3 className="mt-6 font-display text-2xl text-navy">{p.title}</h3>
                 <p className="mt-3 flex-1 font-sans text-sm leading-relaxed text-ledger">

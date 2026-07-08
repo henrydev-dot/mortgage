@@ -1,7 +1,7 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import EcosystemStrip from "@/components/EcosystemStrip";
-import PropertyGrid from "@/components/PropertyGrid";
+import PropertyTerminal from "@/components/PropertyTerminal";
 import InvestmentMethods from "@/components/InvestmentMethods";
 import StatsStrip from "@/components/StatsStrip";
 import WhyUs from "@/components/WhyUs";
@@ -19,7 +19,7 @@ export default function Home() {
       <main>
         <Hero />
         <EcosystemStrip />
-        <PropertyGrid />
+        <PropertyTerminal />
         <InvestmentMethods />
         <StatsStrip />
         <WhyUs />
