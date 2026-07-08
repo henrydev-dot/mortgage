@@ -12,6 +12,9 @@ const CELL = 7; // square size, px
 const GAP = 28; // grid spacing, px
 const RADIUS = 180; // cursor influence radius, px
 const EASE_RETURN = 0.08; // ease-out factor per frame
+const WAVE_SPEED = 340; // px per second
+const WAVE_BAND = 70; // thickness of the expanding ring
+const WAVE_EVERY = 6500; // ms between autonomous pulses
 
 // --grid-line and --compass-blue, pre-split for cheap per-frame lerp
 const BASE_RGB = [231, 233, 237];
@@ -34,7 +37,18 @@ export default function PixelGrid({ className }: { className?: string }) {
     // Per-cell interpolation state, 0 = at rest, 1 = fully excited
     let cells: { x: number; y: number; t: number }[] = [];
     const mouse = { x: -9999, y: -9999 };
+    // Autonomous radar pulse: a ring expanding from a random point,
+    // so the grid feels alive even before the cursor arrives.
+    const wave = { x: 0, y: 0, r: 0, active: false };
     let rafId = 0;
+    let waveTimer = 0;
+
+    const startWave = () => {
+      wave.x = width * (0.15 + Math.random() * 0.7);
+      wave.y = height * (0.15 + Math.random() * 0.7);
+      wave.r = 0;
+      wave.active = true;
+    };
 
     const buildGrid = () => {
       cells = [];
@@ -65,14 +79,31 @@ export default function PixelGrid({ className }: { className?: string }) {
       }
     };
 
-    const frame = () => {
+    let lastTime = 0;
+    const frame = (time: number) => {
+      const dt = lastTime ? Math.min(time - lastTime, 64) : 16;
+      lastTime = time;
+
+      if (wave.active) {
+        wave.r += (WAVE_SPEED * dt) / 1000;
+        if (wave.r - WAVE_BAND > Math.max(width, height) * 1.1) wave.active = false;
+      }
+
       ctx.clearRect(0, 0, width, height);
       for (const c of cells) {
         const dx = c.x - mouse.x;
         const dy = c.y - mouse.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
         // Target excitement with soft falloff inside the radius
-        const target = dist < RADIUS ? 1 - dist / RADIUS : 0;
+        let target = dist < RADIUS ? 1 - dist / RADIUS : 0;
+
+        if (wave.active) {
+          const wdx = c.x - wave.x;
+          const wdy = c.y - wave.y;
+          const wdist = Math.sqrt(wdx * wdx + wdy * wdy);
+          const ring = 1 - Math.abs(wdist - wave.r) / WAVE_BAND;
+          if (ring > 0) target = Math.max(target, ring * 0.65);
+        }
         // Snap up quickly, ease back out slowly
         c.t += (target - c.t) * (target > c.t ? 0.35 : EASE_RETURN);
 
@@ -104,10 +135,13 @@ export default function PixelGrid({ className }: { className?: string }) {
       window.addEventListener("pointermove", onMove);
       window.addEventListener("pointerleave", onLeave);
       rafId = requestAnimationFrame(frame);
+      waveTimer = window.setInterval(startWave, WAVE_EVERY);
+      window.setTimeout(startWave, 900);
     }
 
     return () => {
       cancelAnimationFrame(rafId);
+      clearInterval(waveTimer);
       window.removeEventListener("resize", resize);
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerleave", onLeave);

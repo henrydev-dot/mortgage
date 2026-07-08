@@ -9,6 +9,7 @@ import {
   useTransform,
 } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import { useBlockNumber } from "./useBlockNumber";
 
 const navLinks = [
   { label: "Properties", href: "#properties" },
@@ -22,6 +23,7 @@ export default function Header() {
   const { scrollY } = useScroll();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const block = useBlockNumber();
 
   useMotionValueEvent(scrollY, "change", (y) => setScrolled(y > 80));
 
@@ -46,15 +48,24 @@ export default function Header() {
           />
         </Link>
 
-        <nav className="hidden items-center gap-8 lg:flex" aria-label="Primary">
-          {navLinks.map((link) => (
-            <a key={link.href} href={link.href} className="nav-link">
-              {link.label}
+        <nav className="hidden items-center gap-6 lg:flex" aria-label="Primary">
+          {navLinks.map((link, i) => (
+            <a key={link.href} href={link.href} className="nav-link flex items-baseline gap-1.5">
+              <span className="font-mono text-[9px] text-compass/70">
+                0{i + 1}
+              </span>
+              <span className="text-[12px] font-medium uppercase tracking-[0.14em]">
+                {link.label}
+              </span>
             </a>
           ))}
         </nav>
 
-        <div className="hidden items-center gap-3 lg:flex">
+        <div className="hidden items-center gap-4 lg:flex">
+          <span className="hidden items-center gap-2 border-r border-grid pr-4 font-mono text-[10px] tracking-wider text-ledger xl:flex">
+            <span className="h-1 w-1 rounded-full bg-compass" />
+            #{block.toLocaleString("en-US")}
+          </span>
           <Link href="/whitepaper" className="btn-ghost !px-4 !py-2 text-sm">
             Whitepaper
           </Link>
@@ -76,13 +87,14 @@ export default function Header() {
       {menuOpen && (
         <div className="border-t border-grid bg-paper/95 backdrop-blur-md lg:hidden">
           <nav className="container-line flex flex-col py-4" aria-label="Mobile">
-            {navLinks.map((link) => (
+            {navLinks.map((link, i) => (
               <a
                 key={link.href}
                 href={link.href}
-                className="border-b border-grid py-3 font-sans text-sm text-navy last:border-b-0"
+                className="flex items-baseline gap-2 border-b border-grid py-3 font-sans text-sm text-navy last:border-b-0"
                 onClick={() => setMenuOpen(false)}
               >
+                <span className="font-mono text-[9px] text-compass/70">0{i + 1}</span>
                 {link.label}
               </a>
             ))}
