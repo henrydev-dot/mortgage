@@ -8,9 +8,25 @@ export default function FinalCTA() {
   const [email, setEmail] = useState("");
   const [joined, setJoined] = useState(false);
 
-  const onSubmit = (e: FormEvent) => {
+  const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (email.trim()) setJoined(true);
+    if (!email.trim()) return;
+
+    try {
+      const response = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim() }),
+      });
+
+      if (response.ok) {
+        setJoined(true);
+      } else {
+        console.error("Failed to join waitlist");
+      }
+    } catch (err) {
+      console.error("Error joining waitlist:", err);
+    }
   };
 
   return (
