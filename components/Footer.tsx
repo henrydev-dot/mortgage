@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Github, Twitter, MessageCircle, Send } from "lucide-react";
+import { Twitter, Send } from "lucide-react";
 
 const columns = [
   {
@@ -21,10 +21,8 @@ const columns = [
 ];
 
 const socials = [
-  { icon: Twitter, label: "Twitter / X", href: "#" },
-  { icon: Github, label: "GitHub", href: "#" },
-  { icon: MessageCircle, label: "Discord", href: "#" },
-  { icon: Send, label: "Telegram", href: "#" },
+  { icon: Twitter, label: "Twitter / X", href: "https://x.com/BasedMortgage" },
+  { icon: Send, label: "Telegram", href: "https://t.me/basedMortgage" },
 ];
 
 export default function Footer() {

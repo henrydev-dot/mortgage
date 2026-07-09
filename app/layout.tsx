@@ -22,7 +22,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://mortgage-estate.example.com"),
+  metadataBase: new URL("https://b20mortgage.com"),
   title: "Mortgage Estate — Real estate, tokenized on Base",
   description:
     "Own a fraction of the world's most desirable addresses — verified, custodied, and settled on Base. Fractional real-estate tokens with onchain yield.",
