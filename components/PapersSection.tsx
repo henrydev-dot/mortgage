@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { Download, FileText, ArrowRight } from "lucide-react";
+import { Download, FileText } from "lucide-react";
 import Reveal from "./Reveal";
 
 const papers = [
@@ -72,18 +71,13 @@ export default function PapersSection() {
                     {paper.meta}
                   </p>
                   <div className="mt-auto flex flex-wrap gap-3 pt-6">
-                    <Link href={`/${paper.slug}`} className="arrow-link">
-                      Read Online
-                      <ArrowRight size={14} strokeWidth={1.75} />
-                    </Link>
-                    <a
-                      href={paper.file}
-                      download
-                      className="inline-flex items-center gap-1.5 font-sans text-sm font-medium text-navy transition-colors hover:text-compass"
+                    <span
+                      className="inline-flex items-center gap-1.5 font-sans text-sm font-medium text-ledger/50 cursor-not-allowed select-none"
+                      title="Not published yet"
                     >
                       <Download size={14} strokeWidth={1.75} />
                       Download PDF
-                    </a>
+                    </span>
                   </div>
                 </div>
               </div>

@@ -13,9 +13,9 @@ import { useBlockNumber } from "./useBlockNumber";
 
 const navLinks = [
   { label: "Properties", href: "#properties" },
-  { label: "Invest", href: "#invest" },
+  // { label: "Invest", href: "#invest" },
   { label: "Protocol", href: "#why" },
-  { label: "Roadmap", href: "#roadmap" },
+  // { label: "Roadmap", href: "#roadmap" },
   { label: "Docs", href: "#papers" },
 ];
 

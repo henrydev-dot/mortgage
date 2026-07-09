@@ -20,10 +20,10 @@ export default function Home() {
         <Hero />
         <EcosystemStrip />
         <PropertyTerminal />
-        <InvestmentMethods />
+        {/* <InvestmentMethods /> */}
         <StatsStrip />
         <WhyUs />
-        <Roadmap />
+        {/* <Roadmap /> */}
         <PapersSection />
         <FAQ />
         <FinalCTA />
