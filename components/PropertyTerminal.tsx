@@ -171,7 +171,7 @@ export default function PropertyTerminal() {
         <Reveal index={1}>
           <div className="flex flex-wrap items-end justify-between gap-6 pb-12">
             <h2 className="font-display text-4xl tracking-tight text-navy md:text-5xl">
-              Eight cities. One ledger.
+              Three cities. One ledger.
             </h2>
             <p className="max-w-sm font-sans text-sm leading-relaxed text-ledger">
               Every asset is a regulated SPV mirrored onchain. Open a row to

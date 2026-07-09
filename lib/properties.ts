@@ -58,6 +58,7 @@ export const properties: Property[] = [
     status: "SOLD OUT",
     markRotation: 8,
   },
+  /*
   {
     id: "MRT-004",
     city: "Berlin",
@@ -123,4 +124,5 @@ export const properties: Property[] = [
     status: "MINTING",
     markRotation: -40,
   },
+  */
 ];
