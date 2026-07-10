@@ -28,6 +28,7 @@ import {
   MRT_TOKEN,
   SOCIALS,
   isValidAddress,
+  metamaskDappLink,
   referralLink,
   shortAddress,
   tweetIntentUrl,
@@ -160,6 +161,16 @@ export default function AirdropClient() {
   const [tokenAdded, setTokenAdded] = useState(false);
   const [tokenNotice, setTokenNotice] = useState<string | null>(null);
   const [showManualToken, setShowManualToken] = useState(false);
+  // Mobile browsers have no injected provider — watchAsset needs the
+  // MetaMask in-app browser there, reached via deep link
+  const [env, setEnv] = useState({ injected: false, mobile: false });
+
+  useEffect(() => {
+    setEnv({
+      injected: typeof (window as { ethereum?: unknown }).ethereum !== "undefined",
+      mobile: /android|iphone|ipad|ipod/i.test(navigator.userAgent),
+    });
+  }, []);
 
   // Tasks
   const [tasks, setTasks] = useState<Record<TaskId, boolean>>({
@@ -212,13 +223,19 @@ export default function AirdropClient() {
     };
   }, [address, addressValid, submitted]);
 
-  // Add MRT via the connected wallet (RainbowKit → wagmi wallet client)
+  // Add MRT via the connected wallet (RainbowKit → wagmi wallet client).
+  // On mobile without an injected provider, reopen the page inside the
+  // MetaMask app browser where watchAsset actually works.
   const addToken = async () => {
     setTokenNotice(null);
     if (!walletClient) {
+      if (env.mobile && !env.injected) {
+        window.location.href = metamaskDappLink();
+        return;
+      }
       setShowManualToken(true);
       setTokenNotice(
-        "Connect a wallet first, or add the token manually with the details below."
+        "Connect a wallet first, or add the token manually with the details shown."
       );
       return;
     }
@@ -236,7 +253,7 @@ export default function AirdropClient() {
     } catch {
       setShowManualToken(true);
       setTokenNotice(
-        "Your wallet declined the request — you can add the token manually below."
+        "Your wallet declined the request — add the token manually with the details shown."
       );
     }
   };
@@ -342,92 +359,160 @@ export default function AirdropClient() {
           }}
         />
 
-        <div className="container-line relative z-10 py-20 md:py-28">
-          <motion.p
-            initial={reduced ? false : { opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="eyebrow mb-6 flex items-center gap-2.5 !text-navy"
-          >
-            <span className="pulse-dot inline-block h-1.5 w-1.5 rounded-full bg-coral" />
-            AIRDROP · LIVE ON BASE
-          </motion.p>
-          <motion.h1
-            initial={reduced ? false : { opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.06 }}
-            className="font-display text-[44px] leading-[1.02] tracking-tight text-navy sm:text-[64px] xl:text-[76px]"
-          >
-            Claim your{" "}
-            <DecodeText text="$MRT." className="font-bold text-compass" startDelay={400} />
-          </motion.h1>
-          <motion.p
-            initial={reduced ? false : { opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.12 }}
-            className="mt-6 max-w-lg font-sans text-lg leading-relaxed text-ledger"
-          >
-            {AIRDROP.claimAmount.toLocaleString("en-US")} MRT for every verified
-            application. Earn {AIRDROP.referralBonus} MRT more for every wallet
-            that applies through your referral link.
-          </motion.p>
+        <div className="container-line relative z-10 grid grid-cols-[minmax(0,1fr)] items-center gap-12 py-14 md:py-20 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-10">
+          <div className="min-w-0">
+            <motion.p
+              initial={reduced ? false : { opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+              className="eyebrow mb-6 flex items-center gap-2.5 !text-navy"
+            >
+              <span className="pulse-dot inline-block h-1.5 w-1.5 rounded-full bg-coral" />
+              AIRDROP · LIVE ON BASE
+            </motion.p>
+            <motion.h1
+              initial={reduced ? false : { opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.06 }}
+              className="font-display text-[42px] leading-[1.02] tracking-tight text-navy sm:text-[58px] xl:text-[68px]"
+            >
+              Claim your{" "}
+              <DecodeText text="$MRT." className="font-bold text-compass" startDelay={400} />
+            </motion.h1>
+            <motion.p
+              initial={reduced ? false : { opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.12 }}
+              className="mt-6 max-w-lg font-sans text-base leading-relaxed text-ledger sm:text-lg"
+            >
+              {AIRDROP.claimAmount.toLocaleString("en-US")} MRT for every verified
+              application. Earn {AIRDROP.referralBonus} MRT more for every wallet
+              that applies through your referral link.
+            </motion.p>
+            <motion.div
+              initial={reduced ? false : { opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.18 }}
+              className="mt-8 flex flex-wrap gap-x-8 gap-y-4"
+            >
+              {[
+                [`${AIRDROP.claimAmount.toLocaleString("en-US")} MRT`, "PER APPLICATION"],
+                [`+${AIRDROP.referralBonus} MRT`, "PER REFERRAL"],
+                ["BASE", "CHAIN 8453"],
+              ].map(([value, label]) => (
+                <div key={label} className="border-l border-grid pl-4">
+                  <p className="font-mono text-xl text-navy">{value}</p>
+                  <p className="mt-1 font-mono text-[9px] tracking-eyebrow text-ledger">
+                    {label}
+                  </p>
+                </div>
+              ))}
+            </motion.div>
+          </div>
 
-          {/* Token facts — solid backgrounds so the grid never bleeds through */}
+          {/* Token card — fills the right column, manual details always visible */}
           <motion.div
-            initial={reduced ? false : { opacity: 0, y: 20 }}
+            initial={reduced ? false : { opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.18 }}
-            className="mt-8 flex flex-wrap items-center gap-3"
+            transition={{ duration: 0.5, delay: 0.22 }}
+            className="w-full min-w-0 lg:justify-self-end"
           >
-            <button
-              onClick={() => copy("contract", MRT_TOKEN.address)}
-              className="group inline-flex items-center gap-2 rounded border border-grid bg-paper px-3 py-2 font-mono text-[11px] text-navy transition-colors hover:border-compass"
-              title="Copy contract address"
-            >
-              {MRT_TOKEN.symbol} · {shortAddress(MRT_TOKEN.address)}
-              {copied === "contract" ? (
-                <Check size={12} strokeWidth={2} className="text-compass" />
-              ) : (
-                <Copy size={12} strokeWidth={1.5} className="text-ledger group-hover:text-compass" />
+            <div className="overflow-hidden rounded-lg border border-grid bg-paper shadow-[0_24px_70px_-36px_rgba(29,37,84,0.35)]">
+              <div className="relative flex items-center gap-1.5 border-b border-grid bg-fog px-4 py-2.5">
+                <span className="h-2.5 w-2.5 rounded-full bg-coral/70" />
+                <span className="h-2.5 w-2.5 rounded-full bg-ledger/50" />
+                <span className="h-2.5 w-2.5 rounded-full bg-compass/60" />
+                <span className="absolute left-1/2 hidden -translate-x-1/2 font-mono text-[9px] tracking-eyebrow text-ledger sm:block">
+                  MRT://TOKEN
+                </span>
+                <span className="ml-auto flex items-center gap-1.5 font-mono text-[9px] tracking-eyebrow text-compass">
+                  <span className="pulse-dot h-1 w-1 rounded-full bg-coral" />
+                  BASE MAINNET
+                </span>
+              </div>
+
+              <dl className="divide-y divide-grid">
+                {(
+                  [
+                    ["NETWORK", `${BASE_CHAIN.name} · CHAIN ID ${BASE_CHAIN.id}`, null],
+                    ["CONTRACT", MRT_TOKEN.address, "contract"],
+                    ["SYMBOL", MRT_TOKEN.symbol, null],
+                    ["DECIMALS", String(MRT_TOKEN.decimals), null],
+                  ] as [string, string, string | null][]
+                ).map(([label, value, copyId]) => (
+                  <div key={label} className="flex items-start gap-4 px-4 py-3">
+                    <dt className="w-20 shrink-0 pt-0.5 font-mono text-[9px] tracking-eyebrow text-ledger">
+                      {label}
+                    </dt>
+                    <dd className="flex min-w-0 flex-1 items-start justify-between gap-2 font-mono text-[11px] leading-relaxed text-navy">
+                      <span className="break-all">{value}</span>
+                      {copyId && (
+                        <button
+                          onClick={() => copy(copyId, value)}
+                          aria-label="Copy contract address"
+                          className="shrink-0 pt-0.5 text-ledger transition-colors hover:text-compass"
+                        >
+                          {copied === copyId ? (
+                            <Check size={12} strokeWidth={2} className="text-compass" />
+                          ) : (
+                            <Copy size={12} strokeWidth={1.5} />
+                          )}
+                        </button>
+                      )}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+
+              <div className="flex flex-wrap items-center gap-3 border-t border-grid bg-fog px-4 py-4">
+                <button onClick={addToken} className="btn-primary !px-4 !py-2.5 !text-[12px]">
+                  <PlusCircle size={14} strokeWidth={1.5} />
+                  {tokenAdded ? "MRT added to wallet" : "Add MRT to wallet"}
+                </button>
+                {env.mobile && !env.injected && (
+                  <a
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      window.location.href = metamaskDappLink();
+                    }}
+                    className="btn-ghost !bg-paper !px-4 !py-2.5 !text-[12px]"
+                  >
+                    Open in MetaMask
+                  </a>
+                )}
+                <a
+                  href={`${BASE_CHAIN.explorer}/token/${MRT_TOKEN.address}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ml-auto inline-flex items-center gap-1.5 font-mono text-[10px] tracking-wider text-ledger transition-colors hover:text-compass"
+                >
+                  BASESCAN
+                  <ArrowUpRight size={12} strokeWidth={1.5} />
+                </a>
+              </div>
+              {tokenNotice && (
+                <p className="border-t border-grid px-4 py-3 font-sans text-xs text-ledger">
+                  {tokenNotice}
+                </p>
               )}
-            </button>
-            <button onClick={addToken} className="btn-ghost !bg-paper !px-3 !py-2 !text-[12px]">
-              <PlusCircle size={14} strokeWidth={1.5} />
-              {tokenAdded ? "MRT added to wallet" : "Add MRT to wallet"}
-            </button>
-            <a
-              href={`${BASE_CHAIN.explorer}/token/${MRT_TOKEN.address}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 rounded bg-paper/90 px-2 py-1.5 font-mono text-[11px] tracking-wider text-ledger transition-colors hover:text-compass"
-            >
-              BASESCAN
-              <ArrowUpRight size={12} strokeWidth={1.5} />
-            </a>
-          </motion.div>
-          {tokenNotice && (
-            <p className="mt-3 max-w-md font-sans text-xs text-ledger">{tokenNotice}</p>
-          )}
-          {showManualToken && (
-            <div className="mt-4 max-w-md">
-              <ManualTokenInfo copied={copied} copy={copy} />
             </div>
-          )}
+          </motion.div>
         </div>
       </section>
 
       {/* --------------------------- Claim console --------------------------- */}
       <section className="relative z-10 border-t border-grid bg-fog py-16 md:py-24">
-        <div className="container-line grid gap-10 lg:grid-cols-[1fr_360px]">
+        <div className="container-line grid grid-cols-[minmax(0,1fr)] gap-10 lg:grid-cols-[minmax(0,1fr)_360px]">
           {/* Console window */}
-          <Reveal>
+          <Reveal className="min-w-0">
             <div className="overflow-hidden rounded-lg border border-grid bg-paper shadow-[0_24px_70px_-36px_rgba(29,37,84,0.35)]">
               {/* Window chrome */}
               <div className="relative flex items-center gap-1.5 border-b border-grid bg-fog px-4 py-2.5">
                 <span className="h-2.5 w-2.5 rounded-full bg-coral/70" />
                 <span className="h-2.5 w-2.5 rounded-full bg-ledger/50" />
                 <span className="h-2.5 w-2.5 rounded-full bg-compass/60" />
-                <span className="absolute left-1/2 -translate-x-1/2 font-mono text-[9px] tracking-eyebrow text-ledger">
+                <span className="absolute left-1/2 hidden -translate-x-1/2 font-mono text-[9px] tracking-eyebrow text-ledger sm:block">
                   MRT://AIRDROP_CONSOLE
                 </span>
                 <span className="ml-auto flex items-center gap-1.5 font-mono text-[9px] tracking-eyebrow text-compass">
@@ -597,7 +682,7 @@ export default function AirdropClient() {
                     </div>
                     <div className="mt-4 divide-y divide-grid border-y border-grid">
                       {taskDefs.map((task) => (
-                        <div key={task.id} className="flex items-center gap-4 py-4">
+                        <div key={task.id} className="flex items-center gap-3 py-4 sm:gap-4">
                           <button
                             onClick={() =>
                               setTasks((t) => ({ ...t, [task.id]: !t[task.id] }))
@@ -714,7 +799,7 @@ export default function AirdropClient() {
           </Reveal>
 
           {/* Side rail — how it works */}
-          <div className="space-y-6">
+          <div className="min-w-0 space-y-6">
             <Reveal index={1}>
               <div className="rounded border border-grid bg-paper p-6">
                 <p className="eyebrow mb-5">HOW IT WORKS</p>
