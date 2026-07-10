@@ -17,8 +17,9 @@ next-env.d.ts
 # waitlist database
 /emails.txt
 
-# airdrop claim database
+# airdrop application database
 /claims.json
+/airdrop-applications.json
 
 # env
 .env
