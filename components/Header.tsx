@@ -58,6 +58,9 @@ export default function Header() {
               <span className="text-[12px] font-medium uppercase tracking-[0.14em]">
                 {link.label}
               </span>
+              {link.label === "Airdrop" && (
+                <span className="pulse-dot h-1 w-1 self-center rounded-full bg-coral" />
+              )}
             </a>
           ))}
         </nav>

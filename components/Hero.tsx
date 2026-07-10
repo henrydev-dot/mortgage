@@ -113,6 +113,24 @@ export default function Hero() {
               Read the Lightpaper
             </Link>
           </motion.div>
+
+          {/* Airdrop teaser — small, mono, one line */}
+          <motion.div {...enter(0.24)} className="mt-6">
+            <Link
+              href="/airdrop"
+              className="group inline-flex items-center gap-2.5 rounded border border-grid bg-paper/80 py-2 pl-3 pr-2.5 backdrop-blur-sm transition-colors duration-200 hover:border-compass"
+            >
+              <span className="pulse-dot h-1.5 w-1.5 rounded-full bg-coral" />
+              <span className="font-mono text-[11px] tracking-eyebrow text-navy">
+                AIRDROP LIVE — CLAIM 1,000 $MRT
+              </span>
+              <ArrowRight
+                size={13}
+                strokeWidth={1.75}
+                className="text-compass transition-transform duration-200 group-hover:translate-x-1"
+              />
+            </Link>
+          </motion.div>
         </div>
 
         <motion.div
