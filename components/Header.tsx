@@ -12,11 +12,12 @@ import { Menu, X } from "lucide-react";
 import { useBlockNumber } from "./useBlockNumber";
 
 const navLinks = [
-  { label: "Properties", href: "#properties" },
-  // { label: "Invest", href: "#invest" },
-  { label: "Protocol", href: "#why" },
-  // { label: "Roadmap", href: "#roadmap" },
-  { label: "Docs", href: "#papers" },
+  { label: "Properties", href: "/#properties" },
+  // { label: "Invest", href: "/#invest" },
+  { label: "Protocol", href: "/#why" },
+  // { label: "Roadmap", href: "/#roadmap" },
+  { label: "Docs", href: "/#papers" },
+  { label: "Airdrop", href: "/airdrop" },
 ];
 
 export default function Header() {
@@ -69,7 +70,7 @@ export default function Header() {
           <Link href="/whitepaper" className="btn-ghost !px-4 !py-2 text-sm">
             Whitepaper
           </Link>
-          <a href="#properties" className="btn-primary !px-4 !py-2 text-sm">
+          <a href="/#properties" className="btn-primary !px-4 !py-2 text-sm">
             Explore Properties
           </a>
         </div>
@@ -103,7 +104,7 @@ export default function Header() {
                 Whitepaper
               </Link>
               <a
-                href="#properties"
+                href="/#properties"
                 className="btn-primary flex-1 justify-center !py-2.5"
                 onClick={() => setMenuOpen(false)}
               >

@@ -28,6 +28,26 @@ static host or Vercel.
 - `public/docs/` — lightpaper/whitepaper PDFs (placeholders; drop in the
   real files with the same names)
 
+## Airdrop
+
+`/airdrop` distributes 1,000 MRT per verified application (+200 MRT to the
+referrer for every referred claim), sent automatically from the treasury
+wallet over the Base public RPC.
+
+Setup:
+
+1. Copy `.env.example` to `.env` and set `AIRDROP_PRIVATE_KEY` to the
+   treasury wallet's private key. The wallet must hold MRT
+   (`0xb200000000000000000000d8b21449ecf586c801`) and a little ETH on Base
+   for gas.
+2. Optionally set `AIRDROP_RPC_URL` to a private RPC; it defaults to
+   `https://mainnet.base.org`.
+3. Claims are recorded in `claims.json` (one claim per wallet, referral
+   counts, tx hashes). Mount/persist this file in production if you want
+   claim history to survive redeploys.
+
+Amounts, task links, and the token address live in `lib/airdrop.ts`.
+
 ## Design tokens
 
 Brand palette is defined once as CSS variables in `app/globals.css` and

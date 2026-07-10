@@ -23,7 +23,7 @@ COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 
 # Ensure the emails file exists
-RUN touch emails.txt
+RUN touch emails.txt && echo "{}" > claims.json
 
 EXPOSE 3000
 ENV PORT=3000
