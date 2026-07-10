@@ -47,6 +47,16 @@ export function tweetIntentUrl(refAddress?: string) {
   return `https://x.com/intent/post?text=${encodeURIComponent(text)}`;
 }
 
+/**
+ * Deep link that reopens the current page inside the MetaMask mobile
+ * app's browser — the only reliable way to trigger watchAsset on a
+ * phone without an injected provider. Client-side only.
+ */
+export function metamaskDappLink() {
+  const { host, pathname, search } = window.location;
+  return `https://metamask.app.link/dapp/${host}${pathname}${search}`;
+}
+
 export function isValidAddress(value: string) {
   return /^0x[a-fA-F0-9]{40}$/.test(value.trim());
 }
