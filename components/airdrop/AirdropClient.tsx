@@ -148,6 +148,134 @@ function ManualTokenInfo({
   );
 }
 
+/**
+ * Standalone referral-link generator — works without applying.
+ * Registers the wallet in the referral ledger and shows live stats.
+ */
+function ReferralCard({
+  presetAddress,
+  copied,
+  copy,
+}: {
+  presetAddress: string | null;
+  copied: string | null;
+  copy: (id: string, text: string) => void;
+}) {
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [result, setResult] = useState<{
+    link: string;
+    referrals: number;
+    referralEarned: number;
+  } | null>(null);
+
+  // Follow the wallet chosen in step 01 until the user types their own
+  useEffect(() => {
+    if (presetAddress) setInput(presetAddress);
+  }, [presetAddress]);
+
+  const generate = async () => {
+    const address = input.trim();
+    if (!isValidAddress(address)) {
+      setError("Enter a valid 0x… wallet address.");
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/referral", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ address }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || "Something went wrong.");
+        return;
+      }
+      setResult(data);
+    } catch {
+      setError("Network error. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="rounded border border-grid bg-paper p-6">
+      <p className="eyebrow mb-2">GET YOUR REFERRAL LINK</p>
+      <p className="font-sans text-xs leading-relaxed text-ledger">
+        Enter your wallet, get your link, share it — every application
+        through it queues +{AIRDROP.referralBonus} MRT for you. No
+        application required to start referring.
+      </p>
+      <div className="mt-4 flex flex-col gap-2">
+        <input
+          value={input}
+          onChange={(e) => {
+            setInput(e.target.value);
+            setError(null);
+          }}
+          placeholder="0x… your wallet address"
+          spellCheck={false}
+          className="h-10 w-full rounded border border-grid bg-paper px-3 font-mono text-[11px] text-navy placeholder:text-ledger/70 focus:border-compass focus:outline-none"
+        />
+        <button
+          onClick={generate}
+          disabled={loading}
+          className="btn-primary justify-center !py-2.5 !text-[12px] disabled:opacity-40"
+        >
+          {loading ? (
+            <Loader2 size={14} strokeWidth={1.75} className="animate-spin" />
+          ) : (
+            <Link2 size={14} strokeWidth={1.5} />
+          )}
+          {result ? "Refresh stats" : "Generate link"}
+        </button>
+      </div>
+      {error && (
+        <p className="mt-2 font-mono text-[10px] tracking-wider text-coral">
+          {error.toUpperCase()}
+        </p>
+      )}
+      {result && (
+        <div className="mt-4 space-y-3">
+          <div className="flex items-center gap-2">
+            <code className="min-w-0 flex-1 truncate rounded border border-grid bg-fog px-3 py-2 font-mono text-[10px] text-navy">
+              {result.link}
+            </code>
+            <button
+              onClick={() => copy("refcard", result.link)}
+              aria-label="Copy referral link"
+              className="shrink-0 rounded border border-grid p-2 text-ledger transition-colors hover:border-compass hover:text-compass"
+            >
+              {copied === "refcard" ? (
+                <Check size={13} strokeWidth={2} className="text-compass" />
+              ) : (
+                <Copy size={13} strokeWidth={1.5} />
+              )}
+            </button>
+          </div>
+          <p className="font-mono text-[10px] tracking-wider text-compass">
+            REFERRED APPLICATIONS: {result.referrals} · +{result.referralEarned}{" "}
+            MRT QUEUED
+          </p>
+          <a
+            href={tweetIntentUrl(input.trim())}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="arrow-link font-mono !text-[11px] tracking-wider"
+          >
+            SHARE ON X
+            <ArrowUpRight size={13} strokeWidth={1.75} />
+          </a>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function AirdropClient() {
   const reduced = useReducedMotion();
   const { copied, copy } = useCopy();
@@ -823,6 +951,14 @@ export default function AirdropClient() {
             </Reveal>
 
             <Reveal index={2}>
+              <ReferralCard
+                presetAddress={addressValid && address ? address : null}
+                copied={copied}
+                copy={copy}
+              />
+            </Reveal>
+
+            <Reveal index={3}>
               <div className="rounded border border-grid bg-paper p-6">
                 <p className="eyebrow mb-4">DISTRIBUTION RULES</p>
                 <ul className="space-y-2.5 font-mono text-[11px] leading-relaxed tracking-wide text-ledger">
