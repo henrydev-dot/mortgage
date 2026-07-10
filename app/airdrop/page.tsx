@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Watermark from "@/components/Watermark";
+import Web3Provider from "@/components/airdrop/Web3Provider";
 import AirdropClient from "@/components/airdrop/AirdropClient";
 
 export const metadata: Metadata = {
@@ -14,7 +15,9 @@ export default function AirdropPage() {
   return (
     <>
       <Header />
-      <AirdropClient />
+      <Web3Provider>
+        <AirdropClient />
+      </Web3Provider>
       <Footer />
       <Watermark />
     </>

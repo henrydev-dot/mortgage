@@ -30,23 +30,22 @@ static host or Vercel.
 
 ## Airdrop
 
-`/airdrop` distributes 1,000 MRT per verified application (+200 MRT to the
-referrer for every referred claim), sent automatically from the treasury
-wallet over the Base public RPC.
+`/airdrop` collects applications for 1,000 MRT per wallet (+200 MRT to the
+referrer per referred application). Distribution is manual: applications
+are stored in `airdrop-applications.json` and listed at `/admin/airdrop`
+with per-wallet payout amounts — you send the MRT from the treasury
+yourself after review.
 
-Setup:
+Wallet connection uses RainbowKit (MetaMask, Coinbase Wallet,
+WalletConnect QR/deep links for mobile). Set
+`NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID` in `.env` (free ID from
+https://cloud.reown.com) to enable mobile WalletConnect; extension
+wallets work without it. "Add MRT to wallet" goes through the connected
+wallet's `watchAsset`, with manual token details shown as a fallback.
 
-1. Copy `.env.example` to `.env` and set `AIRDROP_PRIVATE_KEY` to the
-   treasury wallet's private key. The wallet must hold MRT
-   (`0xb200000000000000000000d8b21449ecf586c801`) and a little ETH on Base
-   for gas.
-2. Optionally set `AIRDROP_RPC_URL` to a private RPC; it defaults to
-   `https://mainnet.base.org`.
-3. Claims are recorded in `claims.json` (one claim per wallet, referral
-   counts, tx hashes). Mount/persist this file in production if you want
-   claim history to survive redeploys.
-
-Amounts, task links, and the token address live in `lib/airdrop.ts`.
+Persist `airdrop-applications.json` (volume) in production if you want
+applications to survive redeploys. Amounts, task links, and the token
+address live in `lib/airdrop.ts`.
 
 ## Design tokens
 

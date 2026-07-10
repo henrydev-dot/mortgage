@@ -46,7 +46,7 @@ export default function Hero() {
         };
 
   return (
-    <section className="relative flex min-h-screen flex-col overflow-hidden pt-16">
+    <section className="relative isolate flex min-h-screen flex-col overflow-hidden pt-16">
       <PixelGrid className="absolute inset-0 h-full w-full" />
 
       {/* Readability shields: calm the grid behind the header and the copy */}
@@ -109,7 +109,7 @@ export default function Hero() {
               Explore Properties
               <ArrowRight size={16} strokeWidth={1.75} />
             </a>
-            <Link href="/lightpaper" className="btn-ghost">
+            <Link href="/lightpaper" className="btn-ghost !bg-paper">
               Read the Lightpaper
             </Link>
           </motion.div>
@@ -118,7 +118,7 @@ export default function Hero() {
           <motion.div {...enter(0.24)} className="mt-6">
             <Link
               href="/airdrop"
-              className="group inline-flex items-center gap-2.5 rounded border border-grid bg-paper/80 py-2 pl-3 pr-2.5 backdrop-blur-sm transition-colors duration-200 hover:border-compass"
+              className="group inline-flex items-center gap-2.5 rounded border border-grid bg-paper py-2 pl-3 pr-2.5 transition-colors duration-200 hover:border-compass"
             >
               <span className="pulse-dot h-1.5 w-1.5 rounded-full bg-coral" />
               <span className="font-mono text-[11px] tracking-eyebrow text-navy">

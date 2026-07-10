@@ -148,5 +148,13 @@ export default function PixelGrid({ className }: { className?: string }) {
     };
   }, []);
 
-  return <canvas ref={canvasRef} className={className} aria-hidden="true" />;
+  // pointer-events-none + z-0: the grid is decoration and must never
+  // sit above or intercept clicks meant for page content
+  return (
+    <canvas
+      ref={canvasRef}
+      className={`pointer-events-none z-0 ${className ?? ""}`}
+      aria-hidden="true"
+    />
+  );
 }
