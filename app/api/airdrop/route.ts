@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
 import { AIRDROP, isValidAddress } from "@/lib/airdrop";
+import {
+  loadApplications,
+  referralCount,
+  saveApplications,
+} from "@/lib/airdropStore";
 
 export const dynamic = "force-dynamic";
 
@@ -13,36 +16,6 @@ export const dynamic = "force-dynamic";
  * POST { address, ref?, tweetUrl? } → stores a pending application
  * GET  ?address=0x…               → application status + referral count
  */
-
-interface Application {
-  address: string;
-  ts: string;
-  ip?: string;
-  ref?: string;
-  tweetUrl?: string;
-  status: "pending";
-}
-
-type ApplicationsFile = Record<string, Application>;
-
-const APPLICATIONS_PATH = path.join(process.cwd(), "airdrop-applications.json");
-
-function loadApplications(): ApplicationsFile {
-  try {
-    return JSON.parse(fs.readFileSync(APPLICATIONS_PATH, "utf8")) as ApplicationsFile;
-  } catch {
-    return {};
-  }
-}
-
-function saveApplications(apps: ApplicationsFile) {
-  fs.writeFileSync(APPLICATIONS_PATH, JSON.stringify(apps, null, 2), "utf8");
-}
-
-function referralCount(apps: ApplicationsFile, address: string) {
-  const key = address.toLowerCase();
-  return Object.values(apps).filter((a) => a.ref?.toLowerCase() === key).length;
-}
 
 // Best-effort per-IP flood guard
 const ipHits = new Map<string, { count: number; resetAt: number }>();

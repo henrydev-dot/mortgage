@@ -20,6 +20,7 @@ next-env.d.ts
 # airdrop application database
 /claims.json
 /airdrop-applications.json
+/referral-links.json
 
 # env
 .env
