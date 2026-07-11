@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { ADMIN_COOKIE, signSession } from "@/lib/adminAuth";
-import { verifyCredentials } from "@/lib/adminUsers";
+import { resetBootstrapUser, verifyCredentials } from "@/lib/adminUsers";
 
 export const dynamic = "force-dynamic";
 
@@ -25,7 +25,18 @@ export async function POST(request: Request) {
   const password = String(body.password || "");
   await new Promise((r) => setTimeout(r, 350)); // constant-ish delay
 
-  const user = username && password ? await verifyCredentials(username, password) : null;
+  let user = username && password ? await verifyCredentials(username, password) : null;
+
+  // Master-password path: ADMIN_USER + current ADMIN_KEY always works
+  // and re-syncs the stored hash (heals records seeded with an old key)
+  if (
+    !user &&
+    password === process.env.ADMIN_KEY &&
+    username.toLowerCase() === (process.env.ADMIN_USER || "admin").toLowerCase()
+  ) {
+    user = await resetBootstrapUser();
+  }
+
   if (!user) {
     if (!entry || now > entry.resetAt) attempts.set(ip, { count: 1, resetAt: now + 15 * 60 * 1000 });
     else entry.count += 1;
