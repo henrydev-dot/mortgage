@@ -17,7 +17,7 @@ const navLinks = [
   { label: "Protocol", href: "/#why" },
   // { label: "Roadmap", href: "/#roadmap" },
   { label: "Docs", href: "/#papers" },
-  { label: "Airdrop", href: "/airdrop" },
+  { label: "Airdrop", href: "/app/airdrop" },
 ];
 
 export default function Header() {
@@ -73,9 +73,9 @@ export default function Header() {
           <Link href="/whitepaper" className="btn-ghost !px-4 !py-2 text-sm">
             Whitepaper
           </Link>
-          <a href="/#properties" className="btn-primary !px-4 !py-2 text-sm">
-            Explore Properties
-          </a>
+          <Link href="/app" className="btn-primary !px-4 !py-2 text-sm">
+            Enter App
+          </Link>
         </div>
 
         <button
@@ -106,13 +106,13 @@ export default function Header() {
               <Link href="/whitepaper" className="btn-ghost flex-1 justify-center !py-2.5">
                 Whitepaper
               </Link>
-              <a
-                href="/#properties"
+              <Link
+                href="/app"
                 className="btn-primary flex-1 justify-center !py-2.5"
                 onClick={() => setMenuOpen(false)}
               >
-                Explore
-              </a>
+                Enter App
+              </Link>
             </div>
           </nav>
         </div>
