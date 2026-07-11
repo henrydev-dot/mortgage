@@ -28,6 +28,23 @@ static host or Vercel.
 - `public/docs/` — lightpaper/whitepaper PDFs (placeholders; drop in the
   real files with the same names)
 
+## App (dapp)
+
+`/app` is the web3 application (English UI, RainbowKit wallet connect,
+Base network). Sections: Properties (tokenized listings + USDT fee
+breakdown), Stake (MRT + MRT-USDT pools, admin-editable, contract
+address pluggable), Lend (collateralized USDT borrow calculator with
+monthly/at-maturity repayment), Buy & Burn ledger, Escrow agent
+directory + registration, and DAO (wallet-signed, MRT-balance-weighted
+voting and proposals).
+
+Data: set `MONGODB_URI` to persist collections in MongoDB; without it,
+data lives in `app-data-*.json` files seeded from `lib/appSeed.ts`.
+Admin editors live under `/admin` (set `ADMIN_KEY` to lock writes).
+
+Subdomain: `middleware.ts` rewrites `app.b20mortgage.com/*` to `/app/*`
+— point the subdomain at the same deployment and it just works.
+
 ## Airdrop
 
 `/airdrop` collects applications for 1,000 MRT per wallet (+200 MRT to the

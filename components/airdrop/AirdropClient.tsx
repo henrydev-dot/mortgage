@@ -469,7 +469,7 @@ export default function AirdropClient() {
   const doneCount = Object.values(tasks).filter(Boolean).length;
 
   return (
-    <main>
+    <div>
       {/* ------------------------------- Hero ------------------------------- */}
       <section className="relative isolate overflow-hidden pt-16">
         <PixelGrid className="absolute inset-0 z-0 h-full w-full" />
@@ -982,6 +982,6 @@ export default function AirdropClient() {
           </div>
         </div>
       </section>
-    </main>
+    </div>
   );
 }

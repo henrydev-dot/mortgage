@@ -105,19 +105,19 @@ export default function Hero() {
           </motion.p>
 
           <motion.div {...enter(0.18)} className="mt-10 flex flex-wrap items-center gap-4">
-            <a href="#properties" className="btn-primary">
-              Explore Properties
+            <Link href="/app" className="btn-primary">
+              Enter App
               <ArrowRight size={16} strokeWidth={1.75} />
-            </a>
-            <Link href="/lightpaper" className="btn-ghost !bg-paper">
-              Read the Lightpaper
             </Link>
+            <a href="#properties" className="btn-ghost !bg-paper">
+              Explore Properties
+            </a>
           </motion.div>
 
           {/* Airdrop teaser — small, mono, one line */}
           <motion.div {...enter(0.24)} className="mt-6">
             <Link
-              href="/airdrop"
+              href="/app/airdrop"
               className="group inline-flex items-center gap-2.5 rounded border border-grid bg-paper py-2 pl-3 pr-2.5 transition-colors duration-200 hover:border-compass"
             >
               <span className="pulse-dot h-1.5 w-1.5 rounded-full bg-coral" />

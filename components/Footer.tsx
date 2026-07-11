@@ -4,7 +4,7 @@ import { Twitter, Send } from "lucide-react";
 const columns = [
   {
     title: "Protocol",
-    links: ["Properties", "Airdrop", "Secondary Market", "Yield Vaults"],
+    links: ["Launch App", "Properties", "Airdrop", "Secondary Market"],
   },
   {
     title: "Resources",
@@ -66,8 +66,12 @@ export default function Footer() {
                     : link === "Lightpaper"
                       ? "/lightpaper"
                       : link === "Airdrop"
-                        ? "/airdrop"
-                        : "#";
+                        ? "/app/airdrop"
+                        : link === "Launch App"
+                          ? "/app"
+                          : link === "Properties"
+                            ? "/app"
+                            : "#";
                 return (
                   <li key={link}>
                     <Link

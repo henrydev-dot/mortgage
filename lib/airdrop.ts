@@ -42,12 +42,12 @@ export const SOCIALS = {
 export const O1_BUY_URL = `https://launch.o1.exchange/token/${"0xb200000000000000000000d8b21449ecf586c801"}`;
 
 export function referralLink(address: string) {
-  return `${SITE_URL}/airdrop?ref=${address}`;
+  return `${SITE_URL}/app/airdrop?ref=${address}`;
 }
 
 /** Prefilled tweet for the "Post on X" task */
 export function tweetIntentUrl(refAddress?: string) {
-  const link = refAddress ? referralLink(refAddress) : `${SITE_URL}/airdrop`;
+  const link = refAddress ? referralLink(refAddress) : `${SITE_URL}/app/airdrop`;
   const text = `Real estate, tokenized. Claiming 1,000 $MRT from ${SOCIALS.twitterHandle} on @base — fractional property ownership, settled onchain.\n\nClaim yours: ${link}`;
   return `https://x.com/intent/post?text=${encodeURIComponent(text)}`;
 }
