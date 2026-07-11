@@ -40,7 +40,12 @@ voting and proposals).
 
 Data: set `MONGODB_URI` to persist collections in MongoDB; without it,
 data lives in `app-data-*.json` files seeded from `lib/appSeed.ts`.
-Admin editors live under `/admin` (set `ADMIN_KEY` to lock writes).
+With MongoDB configured, empty collections are seeded automatically on
+first read — open `/app` once after deploying and every collection
+(properties, pools, burns, escrow, proposals) is created and filled.
+If auth fails, check whether your Mongo user needs `?authSource=admin`
+on the URI. Admin editors live under `/admin` (set `ADMIN_KEY` to lock
+writes).
 
 Subdomain: `middleware.ts` rewrites `app.b20mortgage.com/*` to `/app/*`
 — point the subdomain at the same deployment and it just works.

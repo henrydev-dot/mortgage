@@ -1,0 +1,14 @@
+node_modules
+.next
+out
+.git
+.env
+.env.local
+.env.production
+npm-debug.log*
+emails.txt
+claims.json
+airdrop-applications.json
+referral-links.json
+app-data-*.json
+README.md
