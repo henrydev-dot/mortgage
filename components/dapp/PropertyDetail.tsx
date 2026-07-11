@@ -1,29 +1,101 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
+  ArrowUpRight,
   Bath,
   BedDouble,
   Building2,
   CalendarDays,
+  Check,
   Landmark,
+  Loader2,
   MapPin,
   Ruler,
   ShieldCheck,
+  XCircle,
 } from "lucide-react";
-import { useAccount } from "wagmi";
+import { erc20Abi, parseEther, parseUnits } from "viem";
+import { useAccount, useSendTransaction, useWriteContract } from "wagmi";
 import ConnectWallet from "./ConnectWallet";
-import type { AppProperty } from "@/lib/appSeed";
+import { BASE_CHAIN, isValidAddress } from "@/lib/airdrop";
+import type { AppConfig, AppProperty } from "@/lib/appSeed";
 
 const usd = (n: number) =>
   n.toLocaleString("en-US", { maximumFractionDigits: 0 });
 
 export default function PropertyDetail({ property: p }: { property: AppProperty }) {
-  const { isConnected } = useAccount();
+  const { address, isConnected } = useAccount();
   const [imageIndex, setImageIndex] = useState(0);
   const [tokens, setTokens] = useState(10);
+
+  // Reservation payments — treasury + amounts come from /admin/settings
+  const [config, setConfig] = useState<AppConfig | null>(null);
+  const [reserving, setReserving] = useState<"USDT" | "ETH" | null>(null);
+  const [reserveTx, setReserveTx] = useState<string | null>(null);
+  const [reserveError, setReserveError] = useState<string | null>(null);
+  const { writeContractAsync } = useWriteContract();
+  const { sendTransactionAsync } = useSendTransaction();
+
+  useEffect(() => {
+    fetch("/api/app/config", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((d) => setConfig(d.config))
+      .catch(() => {});
+  }, []);
+
+  const reservationsOpen =
+    p.status === "MINTING" && !!config && isValidAddress(config.treasuryAddress);
+
+  const recordOrder = async (txHash: string, amount: number, currency: "USDT" | "ETH") => {
+    setReserveTx(txHash);
+    await fetch("/api/app/orders", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ propertyId: p.id, address, txHash, amount, currency }),
+    }).catch(() => {});
+  };
+
+  const reserveUsdt = async () => {
+    if (!config || !address) return;
+    setReserving("USDT");
+    setReserveError(null);
+    try {
+      const hash = await writeContractAsync({
+        address: config.usdtAddress as `0x${string}`,
+        abi: erc20Abi,
+        functionName: "transfer",
+        args: [
+          config.treasuryAddress as `0x${string}`,
+          parseUnits(String(config.startAmountUsdt), 6),
+        ],
+      });
+      await recordOrder(hash, config.startAmountUsdt, "USDT");
+    } catch {
+      setReserveError("Transaction rejected or failed.");
+    } finally {
+      setReserving(null);
+    }
+  };
+
+  const reserveEth = async () => {
+    if (!config || !address) return;
+    setReserving("ETH");
+    setReserveError(null);
+    try {
+      const hash = await sendTransactionAsync({
+        to: config.treasuryAddress as `0x${string}`,
+        value: parseEther(String(config.startAmountEth)),
+      });
+      await recordOrder(hash, config.startAmountEth, "ETH");
+    } catch {
+      setReserveError("Transaction rejected or failed.");
+    } finally {
+      setReserving(null);
+    }
+  };
 
   const fees = useMemo(() => {
     const base = tokens * p.tokenPriceUsdt;
@@ -225,18 +297,80 @@ export default function PropertyDetail({ property: p }: { property: AppProperty 
               </dl>
 
               <div className="mt-5">
-                {isConnected ? (
-                  <button
-                    disabled
-                    className="btn-primary w-full justify-center opacity-40"
-                    title="Minting opens when property contracts are live"
-                  >
-                    Mint {tokens} tokens — contract pending
-                  </button>
-                ) : (
+                {!isConnected ? (
                   <div className="[&>button]:w-full [&>button]:justify-center">
                     <ConnectWallet />
                   </div>
+                ) : reserveTx ? (
+                  <div className="rounded border border-compass/40 bg-compass/5 p-4">
+                    <p className="flex items-center gap-2 font-sans text-sm font-medium text-compass">
+                      <Check size={16} strokeWidth={2} />
+                      Reservation payment sent.
+                    </p>
+                    <p className="mt-1.5 font-sans text-xs leading-relaxed text-ledger">
+                      The team verifies the transaction and contacts you with
+                      allocation details.
+                    </p>
+                    <a
+                      href={`${BASE_CHAIN.explorer}/tx/${reserveTx}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="arrow-link mt-3 font-mono !text-[11px] tracking-wider"
+                    >
+                      VIEW TRANSACTION
+                      <ArrowUpRight size={13} strokeWidth={1.75} />
+                    </a>
+                  </div>
+                ) : reservationsOpen && config ? (
+                  <div className="space-y-2">
+                    <p className="font-mono text-[9px] tracking-eyebrow text-ledger">
+                      RESERVE THIS PROPERTY — START PAYMENT TO THE TREASURY
+                    </p>
+                    <button
+                      onClick={reserveUsdt}
+                      disabled={reserving !== null}
+                      className="btn-primary w-full justify-center disabled:opacity-40"
+                    >
+                      {reserving === "USDT" ? (
+                        <Loader2 size={15} className="animate-spin" />
+                      ) : (
+                        `Reserve with ${config.startAmountUsdt} USDT`
+                      )}
+                    </button>
+                    <button
+                      onClick={reserveEth}
+                      disabled={reserving !== null}
+                      className="btn-ghost w-full justify-center !bg-paper disabled:opacity-40"
+                    >
+                      {reserving === "ETH" ? (
+                        <Loader2 size={15} className="animate-spin" />
+                      ) : (
+                        `Reserve with ${config.startAmountEth} ETH`
+                      )}
+                    </button>
+                    {reserveError && (
+                      <p className="flex items-center gap-1.5 font-sans text-xs text-coral">
+                        <XCircle size={13} strokeWidth={1.5} />
+                        {reserveError}
+                      </p>
+                    )}
+                  </div>
+                ) : (
+                  <button
+                    disabled
+                    className="btn-primary w-full justify-center opacity-40"
+                    title={
+                      p.status === "MINTING"
+                        ? "Reservations open once the treasury address is configured"
+                        : "This property is not minting"
+                    }
+                  >
+                    {p.status === "MINTING"
+                      ? "Reservations opening soon"
+                      : p.status === "SOLD OUT"
+                        ? "Sold out"
+                        : "Trades on secondary market"}
+                  </button>
                 )}
                 <p className="mt-3 flex items-center gap-1.5 font-mono text-[9px] tracking-eyebrow text-ledger">
                   <ShieldCheck size={12} strokeWidth={1.5} className="text-compass" />

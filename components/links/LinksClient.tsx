@@ -49,7 +49,7 @@ interface LinkDef {
 const links: LinkDef[] = [
   { icon: Twitter, label: "X", sub: SOCIALS.twitterHandle, href: SOCIALS.twitter },
   { icon: Globe, label: "Website", sub: "b20mortgage.com", href: "https://b20mortgage.com" },
-  { icon: Wallet, label: "Launch App", sub: "b20mortgage.com/app", href: "/app" },
+  { icon: Wallet, label: "Launch App", sub: "app.b20mortgage.com", href: "https://app.b20mortgage.com" },
   { icon: Send, label: "Telegram", sub: "t.me/basedMortgage", href: SOCIALS.telegram },
   { icon: BookOpen, label: "Medium", sub: "b20mortgage.medium.com", href: SOCIALS.medium },
   { icon: Github, label: "GitHub", sub: "github.com/b20mortgage", href: SOCIALS.github },

@@ -17,7 +17,7 @@ const navLinks = [
   { label: "Protocol", href: "/#why" },
   // { label: "Roadmap", href: "/#roadmap" },
   { label: "Docs", href: "/#papers" },
-  { label: "Airdrop", href: "/app/airdrop" },
+  { label: "Airdrop", href: "https://app.b20mortgage.com/airdrop" },
 ];
 
 export default function Header() {
@@ -73,9 +73,9 @@ export default function Header() {
           <Link href="/whitepaper" className="btn-ghost !px-4 !py-2 text-sm">
             Whitepaper
           </Link>
-          <Link href="/app" className="btn-primary !px-4 !py-2 text-sm">
+          <a href="https://app.b20mortgage.com" className="btn-primary !px-4 !py-2 text-sm">
             Enter App
-          </Link>
+          </a>
         </div>
 
         <button
@@ -106,13 +106,13 @@ export default function Header() {
               <Link href="/whitepaper" className="btn-ghost flex-1 justify-center !py-2.5">
                 Whitepaper
               </Link>
-              <Link
-                href="/app"
+              <a
+                href="https://app.b20mortgage.com"
                 className="btn-primary flex-1 justify-center !py-2.5"
                 onClick={() => setMenuOpen(false)}
               >
                 Enter App
-              </Link>
+              </a>
             </div>
           </nav>
         </div>
