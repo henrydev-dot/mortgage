@@ -86,16 +86,19 @@ export default function ConstructionNotice() {
               </div>
 
               <p className="mt-4 font-sans text-sm leading-relaxed text-navy/80">
-                This interface is an early preview. Smart contracts are not
-                live yet — <span className="font-medium text-navy">do not send
-                funds or attempt any transactions</span>. Minting, staking,
-                borrowing, and escrow will activate once audits complete.
+                This interface is an early preview and protocol contracts are
+                still in audit.{" "}
+                <span className="font-medium text-navy">
+                  Only use the payment flows shown inside this app
+                </span>{" "}
+                — never send funds to addresses received in DMs or comments.
               </p>
 
               <ul className="mt-4 space-y-1.5 font-mono text-[10px] leading-relaxed tracking-wide text-ledger">
                 <li>· BROWSING AND WALLET CONNECTION ARE SAFE</li>
                 <li>· AIRDROP APPLICATIONS AND DAO VOTES WORK (GASLESS)</li>
-                <li>· FOLLOW @BasedMortgage FOR LAUNCH ANNOUNCEMENTS</li>
+                <li>· STAKING & BORROWING ACTIVATE AFTER AUDIT</li>
+                <li>· FOLLOW @BasedMortgage FOR ANNOUNCEMENTS</li>
               </ul>
 
               <button onClick={dismiss} className="btn-primary mt-6 w-full justify-center">

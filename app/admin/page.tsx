@@ -1,12 +1,14 @@
 import Link from "next/link";
 
 const tools = [
-  ["Waitlist emails", "/admin/emails", "Landing-page waitlist signups"],
-  ["Airdrop applications", "/admin/airdrop", "Applications, referrers, payouts owed"],
+  ["Properties", "/admin/properties", "Listings editor with photo uploads"],
+  ["App settings", "/admin/settings", "Treasury address, reservation amounts, contract addresses"],
+  ["Reservations", "/admin/orders", "Property reservation payments (USDT/ETH)"],
   ["Stake pools", "/admin/pools", "APR, lock, TVL, contract addresses"],
-  ["Properties", "/admin/properties", "Tokenized property listings (JSON)"],
   ["Escrow agents", "/admin/escrow", "Approve / reject registrations"],
+  ["Airdrop applications", "/admin/airdrop", "Applications, referrers, payouts owed"],
   ["Buy & burn ledger", "/admin/burns", "Buyback history (JSON)"],
+  ["Waitlist emails", "/admin/emails", "Landing-page waitlist signups"],
 ];
 
 export default function AdminIndexPage() {

@@ -335,6 +335,45 @@ export interface DaoVote {
   ts: string;
 }
 
+/* ------------------------------ app config ------------------------------ */
+
+export interface AppConfig {
+  /** Treasury address that receives property reservation payments */
+  treasuryAddress: string;
+  /** Reservation amount when paying in USDT */
+  startAmountUsdt: number;
+  /** Reservation amount when paying in ETH */
+  startAmountEth: number;
+  /** USDT token contract on Base */
+  usdtAddress: string;
+  /** Deployed MortgageStaking contract (empty = in audit) */
+  stakingContract: string;
+  /** Deployed MortgageLending contract (empty = in audit) */
+  lendingContract: string;
+}
+
+export const defaultConfig: AppConfig = {
+  treasuryAddress: "",
+  startAmountUsdt: 100,
+  startAmountEth: 0.03,
+  usdtAddress: "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
+  stakingContract: "",
+  lendingContract: "",
+};
+
+/* ------------------------------ reservations ---------------------------- */
+
+export interface Order {
+  id: string;
+  propertyId: string;
+  address: string; // payer wallet
+  txHash: string;
+  amount: number;
+  currency: "USDT" | "ETH";
+  ts: string;
+  ip?: string;
+}
+
 /* ------------------------------ lend/borrow ----------------------------- */
 
 export interface LendMarket {

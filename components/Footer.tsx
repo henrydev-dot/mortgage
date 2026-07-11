@@ -66,11 +66,11 @@ export default function Footer() {
                     : link === "Lightpaper"
                       ? "/lightpaper"
                       : link === "Airdrop"
-                        ? "/app/airdrop"
+                        ? "https://app.b20mortgage.com/airdrop"
                         : link === "Launch App"
-                          ? "/app"
+                          ? "https://app.b20mortgage.com"
                           : link === "Properties"
-                            ? "/app"
+                            ? "https://app.b20mortgage.com"
                             : "#";
                 return (
                   <li key={link}>
