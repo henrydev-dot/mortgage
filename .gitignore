@@ -30,3 +30,6 @@ next-env.d.ts
 # dapp file-store collections (when MongoDB is not configured)
 /app-data-*.json
 /uploads
+contracts/node_modules
+contracts/.env
+contracts/package-lock.json
