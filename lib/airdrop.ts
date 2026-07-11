@@ -34,7 +34,12 @@ export const SOCIALS = {
   twitterHandle: "@BasedMortgage",
   telegram: "https://t.me/basedMortgage",
   medium: "https://b20mortgage.medium.com/",
+  github: "https://github.com/b20mortgage",
+  email: "support@b20mortgage.com",
 };
+
+/** o1.exchange launch listing for $MRT */
+export const O1_BUY_URL = `https://launch.o1.exchange/token/${"0xb200000000000000000000d8b21449ecf586c801"}`;
 
 export function referralLink(address: string) {
   return `${SITE_URL}/airdrop?ref=${address}`;
