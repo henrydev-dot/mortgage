@@ -178,7 +178,7 @@ export const seedPools: StakePool[] = [
     lockDays: 30,
     minStake: 1_000,
     tvlMrt: 14_200_000,
-    contract: "",
+    contract: "0xd1a9debed94de40188288a70d4d9bb39bc0cd67a",
     active: true,
     description:
       "Single-sided MRT staking. Rewards stream per block from the protocol fee pool; principal unlocks after the lock period.",
@@ -191,7 +191,7 @@ export const seedPools: StakePool[] = [
     lockDays: 60,
     minStake: 500,
     tvlMrt: 6_800_000,
-    contract: "",
+    contract: "0xd1a9debed94de40188288a70d4d9bb39bc0cd67a",
     active: true,
     description:
       "Provide MRT-USDT liquidity and stake the LP token. Higher APR for deeper liquidity — subject to impermanent loss.",
@@ -353,12 +353,13 @@ export interface AppConfig {
 }
 
 export const defaultConfig: AppConfig = {
-  treasuryAddress: "",
+  treasuryAddress: "0x9EdbfA7e62E50bd56f8433FFbCb050Af620004c3",
   startAmountUsdt: 100,
   startAmountEth: 0.03,
   usdtAddress: "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
-  stakingContract: "",
-  lendingContract: "",
+  // Deployed on Base mainnet — see contracts/deployments.json
+  stakingContract: "0xd1a9debed94de40188288a70d4d9bb39bc0cd67a",
+  lendingContract: "0xdf500d8e1ea4528c9a36cf79cbabe37db414f98e",
 };
 
 /* ------------------------------ reservations ---------------------------- */

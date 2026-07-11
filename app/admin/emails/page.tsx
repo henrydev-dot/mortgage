@@ -14,8 +14,8 @@ export default function AdminEmailsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-fog py-16">
-      <div className="container-line max-w-2xl mx-auto">
+    <div>
+      <div className="max-w-2xl">
         <h1 className="font-display text-3xl text-navy mb-6">Registered Waitlist Emails</h1>
         
         <div className="bg-paper rounded border border-grid overflow-hidden">

@@ -6,8 +6,17 @@ import { readCollection, writeCollection } from "@/lib/appStore";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const [config] = await readCollection<AppConfig>("config", [defaultConfig]);
-  return NextResponse.json({ config: { ...defaultConfig, ...config } });
+  const [stored] = await readCollection<AppConfig>("config", [defaultConfig]);
+  // Prefer stored values, but fall back to defaults for anything empty —
+  // so newly shipped defaults (e.g. deployed contract addresses) appear
+  // even if an older config document exists.
+  const config = Object.fromEntries(
+    Object.entries(defaultConfig).map(([key, fallback]) => {
+      const value = (stored as unknown as Record<string, unknown> | undefined)?.[key];
+      return [key, value === undefined || value === "" || value === 0 ? fallback : value];
+    })
+  ) as unknown as AppConfig;
+  return NextResponse.json({ config });
 }
 
 /** Admin: update payment + contract settings. */

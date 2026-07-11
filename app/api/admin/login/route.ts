@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { ADMIN_COOKIE, adminCookieValue } from "@/lib/adminAuth";
+import { ADMIN_COOKIE, signSession } from "@/lib/adminAuth";
+import { verifyCredentials } from "@/lib/adminUsers";
 
 export const dynamic = "force-dynamic";
 
@@ -14,24 +15,26 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Too many attempts. Try again later." }, { status: 429 });
   }
 
-  const key = process.env.ADMIN_KEY;
-  if (!key) {
+  if (!process.env.ADMIN_KEY) {
+    // Dev mode — no auth configured
     return NextResponse.json({ ok: true, open: true });
   }
 
   const body = await request.json().catch(() => ({}));
+  const username = String(body.username || "").trim();
   const password = String(body.password || "");
   await new Promise((r) => setTimeout(r, 350)); // constant-ish delay
 
-  if (password !== key) {
+  const user = username && password ? await verifyCredentials(username, password) : null;
+  if (!user) {
     if (!entry || now > entry.resetAt) attempts.set(ip, { count: 1, resetAt: now + 15 * 60 * 1000 });
     else entry.count += 1;
-    return NextResponse.json({ error: "Wrong password." }, { status: 401 });
+    return NextResponse.json({ error: "Wrong username or password." }, { status: 401 });
   }
 
   attempts.delete(ip);
-  const res = NextResponse.json({ ok: true });
-  res.cookies.set(ADMIN_COOKIE, adminCookieValue(), {
+  const res = NextResponse.json({ ok: true, username: user.username });
+  res.cookies.set(ADMIN_COOKIE, signSession(user.username), {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
