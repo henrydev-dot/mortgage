@@ -59,8 +59,8 @@ export default function AdminAirdropPage() {
     apps.filter((a) => a.ref).length * AIRDROP.referralBonus;
 
   return (
-    <div className="min-h-screen bg-fog py-16">
-      <div className="container-line mx-auto max-w-6xl space-y-10">
+    <div>
+      <div className="space-y-10">
         <div>
           <h1 className="mb-2 font-display text-3xl text-navy">
             Airdrop Applications

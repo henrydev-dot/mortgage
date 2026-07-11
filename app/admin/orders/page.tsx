@@ -12,8 +12,8 @@ export default async function AdminOrdersPage() {
   const totalEth = orders.filter((o) => o.currency === "ETH").reduce((s, o) => s + o.amount, 0);
 
   return (
-    <div className="min-h-screen bg-fog py-16">
-      <div className="container-line mx-auto max-w-5xl">
+    <div>
+      <div>
         <h1 className="mb-1 font-display text-3xl text-navy">Reservations</h1>
         <p className="mb-6 font-sans text-sm text-ledger">
           Property reservation payments sent to the treasury address — verify

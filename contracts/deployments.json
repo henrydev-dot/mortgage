@@ -1,0 +1,12 @@
+{
+  "network": "Base",
+  "chainId": 8453,
+  "deployer": "0x9EdbfA7e62E50bd56f8433FFbCb050Af620004c3",
+  "mrt": "0xb200000000000000000000d8b21449ecf586c801",
+  "usdt": "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
+  "MortgageStaking": "0xd1a9debed94de40188288a70d4d9bb39bc0cd67a",
+  "MortgageLending": "0xdf500d8e1ea4528c9a36cf79cbabe37db414f98e",
+  "stakingTx": "0x20b4d40d4a8c1816bfd2f4b60b14fcbabb66a218705f2f0d8910e3a54fd89009",
+  "lendingTx": "0x73fc1535b1271bbcc887c66b3f0049b21b2b8e038f6a23f70b966e81ed1894e8",
+  "deployedAt": "2026-07-11"
+}

@@ -2,19 +2,44 @@ import { NextResponse, type NextRequest } from "next/server";
 
 /**
  * 1. Admin gate: when ADMIN_KEY is set, /admin pages require the
- *    session cookie issued by /api/admin/login (sha256 of the key).
+ *    session cookie issued by /api/admin/login — base64url(username)
+ *    dot HMAC-SHA256(username) signed with ADMIN_KEY.
  * 2. Subdomain routing: app.b20mortgage.com serves the dapp from the
- *    domain root — "/" and section paths rewrite to /app/*; /admin and
- *    /api pass through so the panel and APIs work on the subdomain too.
+ *    domain root; /admin and /api pass through untouched.
  */
 
 const ADMIN_COOKIE = "mrt_admin";
 
-async function sha256Hex(value: string) {
-  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
-  return Array.from(new Uint8Array(digest))
+async function hmacHex(secret: string, message: string) {
+  const key = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
+  const sig = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(message));
+  return Array.from(new Uint8Array(sig))
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("");
+}
+
+function decodeBase64Url(value: string) {
+  try {
+    const b64 = value.replace(/-/g, "+").replace(/_/g, "/");
+    return atob(b64 + "=".repeat((4 - (b64.length % 4)) % 4));
+  } catch {
+    return null;
+  }
+}
+
+async function validSession(cookie: string | undefined, secret: string) {
+  if (!cookie) return false;
+  const [b64, sig] = cookie.split(".");
+  if (!b64 || !sig) return false;
+  const username = decodeBase64Url(b64);
+  if (!username) return false;
+  return (await hmacHex(secret, username)) === sig;
 }
 
 export async function middleware(request: NextRequest) {
@@ -23,14 +48,11 @@ export async function middleware(request: NextRequest) {
   // ---- admin gate (any host) ----
   if (pathname.startsWith("/admin") && pathname !== "/admin/login") {
     const key = process.env.ADMIN_KEY;
-    if (key) {
-      const cookie = request.cookies.get(ADMIN_COOKIE)?.value;
-      if (cookie !== (await sha256Hex(key))) {
-        const url = request.nextUrl.clone();
-        url.pathname = "/admin/login";
-        url.search = `?next=${encodeURIComponent(pathname)}`;
-        return NextResponse.redirect(url);
-      }
+    if (key && !(await validSession(request.cookies.get(ADMIN_COOKIE)?.value, key))) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/admin/login";
+      url.search = `?next=${encodeURIComponent(pathname)}`;
+      return NextResponse.redirect(url);
     }
   }
 

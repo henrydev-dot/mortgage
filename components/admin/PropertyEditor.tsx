@@ -58,9 +58,15 @@ function ImageManager({
       const form = new FormData();
       form.append("file", file);
       const res = await fetch("/api/admin/upload", { method: "POST", body: form });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.error || "Upload failed.");
+      const text = await res.text();
+      let data: { url?: string; error?: string } = {};
+      try {
+        data = JSON.parse(text);
+      } catch {
+        /* proxy/HTML error body */
+      }
+      if (!res.ok || !data.url) {
+        setError(data.error || `Upload failed (HTTP ${res.status}).`);
         return;
       }
       onChange([...images, data.url]);

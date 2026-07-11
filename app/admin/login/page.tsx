@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import { Loader2, Lock, XCircle } from "lucide-react";
 
 export default function AdminLoginPage() {
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -16,7 +17,7 @@ export default function AdminLoginPage() {
       const res = await fetch("/api/admin/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ username, password }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -31,6 +32,9 @@ export default function AdminLoginPage() {
       setBusy(false);
     }
   };
+
+  const input =
+    "h-11 w-full rounded border border-grid bg-paper px-3 font-mono text-sm text-navy placeholder:text-ledger/60 focus:border-compass focus:outline-none";
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-fog p-4">
@@ -57,14 +61,22 @@ export default function AdminLoginPage() {
             </div>
           </div>
           <input
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Username"
+            autoComplete="username"
+            autoFocus
+            className={`${input} mt-5`}
+          />
+          <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="Admin password"
-            autoFocus
-            className="mt-5 h-11 w-full rounded border border-grid bg-paper px-3 font-mono text-sm text-navy placeholder:text-ledger/60 focus:border-compass focus:outline-none"
+            placeholder="Password"
+            autoComplete="current-password"
+            className={`${input} mt-3`}
           />
-          <button type="submit" disabled={busy} className="btn-primary mt-3 w-full justify-center disabled:opacity-40">
+          <button type="submit" disabled={busy} className="btn-primary mt-4 w-full justify-center disabled:opacity-40">
             {busy ? <Loader2 size={15} className="animate-spin" /> : <Lock size={15} strokeWidth={1.75} />}
             Sign in
           </button>

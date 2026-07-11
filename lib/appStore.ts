@@ -16,7 +16,14 @@ import type { Collection, Document, MongoClient } from "mongodb";
 let clientPromise: Promise<MongoClient> | null = null;
 
 function mongoUri() {
-  return process.env.MONGODB_URI || process.env.MONGO_URI || "";
+  let uri = process.env.MONGODB_URI || process.env.MONGO_URI || "";
+  // Dokploy/most templates create the Mongo user in the `admin` db; when
+  // the URI carries credentials but no authSource, default to admin so
+  // auth doesn't fail. Override by putting authSource=… in the URI.
+  if (uri && /\/\/[^/]+@/.test(uri) && !/[?&]authSource=/i.test(uri)) {
+    uri += (uri.includes("?") ? "&" : "?") + "authSource=admin";
+  }
+  return uri;
 }
 
 async function getMongoCollection(name: string): Promise<Collection<Document> | null> {
