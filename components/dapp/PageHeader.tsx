@@ -1,7 +1,6 @@
 "use client";
 
 import type { ReactNode } from "react";
-import PixelGrid from "@/components/PixelGrid";
 import DecodeText from "@/components/DecodeText";
 
 interface PageHeaderProps {
@@ -12,39 +11,29 @@ interface PageHeaderProps {
 }
 
 /**
- * Dapp page hero band — the marketing hero's DNA in compact form:
- * cursor-reactive pixel grid, mono eyebrow with live dot, decode title.
+ * Minimal dashboard page header — mono eyebrow with live dot, decode
+ * title, optional stat row. No background effects; the grid stays on
+ * the marketing pages.
  */
 export default function PageHeader({ eyebrow, title, sub, children }: PageHeaderProps) {
   return (
-    <section className="relative isolate -mx-4 mb-8 overflow-hidden border-b border-grid bg-paper px-4 md:-mx-8 md:px-8">
-      <PixelGrid className="absolute inset-0 z-0 h-full w-full" />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-y-0 left-0 z-[1] w-full lg:w-[65%]"
-        style={{
-          background:
-            "linear-gradient(90deg, rgba(255,255,255,0.94) 0%, rgba(255,255,255,0.6) 60%, transparent 100%)",
-        }}
-      />
-      <div className="relative z-10 mx-auto flex w-full max-w-[1400px] flex-wrap items-end justify-between gap-6 py-10 md:py-14">
-        <div className="min-w-0">
-          <p className="eyebrow mb-3 flex items-center gap-2.5 !text-navy">
-            <span className="pulse-dot inline-block h-1.5 w-1.5 rounded-full bg-coral" />
-            {eyebrow}
+    <div className="mb-8 flex flex-wrap items-end justify-between gap-6 border-b border-grid pb-6">
+      <div className="min-w-0">
+        <p className="eyebrow mb-2.5 flex items-center gap-2.5 !text-navy">
+          <span className="pulse-dot inline-block h-1.5 w-1.5 rounded-full bg-coral" />
+          {eyebrow}
+        </p>
+        <h1 className="font-display text-[28px] tracking-tight text-navy md:text-[34px]">
+          <DecodeText text={title} startDelay={200} charDelay={40} />
+        </h1>
+        {sub && (
+          <p className="mt-2.5 max-w-xl font-sans text-sm leading-relaxed text-ledger">
+            {sub}
           </p>
-          <h1 className="font-display text-3xl tracking-tight text-navy md:text-[40px]">
-            <DecodeText text={title} startDelay={250} charDelay={45} />
-          </h1>
-          {sub && (
-            <p className="mt-3 max-w-xl font-sans text-sm leading-relaxed text-ledger">
-              {sub}
-            </p>
-          )}
-        </div>
-        {children && <div className="flex flex-wrap items-center gap-6">{children}</div>}
+        )}
       </div>
-    </section>
+      {children && <div className="flex flex-wrap items-center gap-6">{children}</div>}
+    </div>
   );
 }
 
