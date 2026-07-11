@@ -1,9 +1,30 @@
 # Mortgage Estate — Contracts (testnet build)
 
-Two self-contained Solidity 0.8.24 contracts, no external imports —
-paste each file into [Remix](https://remix.ethereum.org), compile with
-0.8.24, and deploy. Test on **Base Sepolia** (chain 84532) first, then
-Base mainnet (8453).
+Two self-contained Solidity 0.8.24 contracts, no external imports.
+Deploy with the included script (recommended) or paste into
+[Remix](https://remix.ethereum.org). Test on **Base Sepolia**
+(chain 84532) first, then Base mainnet (8453).
+
+## Deploy from your PC
+
+```bash
+cd contracts
+npm install
+
+# your deployer wallet's private key — NEVER commit this file
+echo "DEPLOYER_PRIVATE_KEY=0xyourprivatekey" > .env
+
+npm run deploy:testnet   # Base Sepolia dry run (wallet needs Sepolia ETH)
+npm run deploy           # Base mainnet — asks for a "yes" confirmation
+```
+
+The script compiles both contracts (solc 0.8.26, optimizer on), shows
+the plan (network, deployer, balance, constructor args — MRT and USDT
+addresses are prefilled), deploys **MortgageStaking(mrt, usdt)** then
+**MortgageLending(usdt)** over the Base public RPC, waits for receipts,
+and writes the addresses to `contracts/deployments.json`. Use
+`RPC_URL=` in `.env` to override the RPC, `npm run compile` to
+compile without deploying.
 
 > ⚠️ These are owner-centric by design (project requirement for the
 > testnet phase): the owner can reprice collateral, adjust debts, seize

@@ -1,0 +1,14 @@
+{
+  "name": "mortgage-contracts",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "deploy": "node deploy.mjs",
+    "deploy:testnet": "node deploy.mjs --testnet",
+    "compile": "node deploy.mjs --compile-only"
+  },
+  "dependencies": {
+    "solc": "0.8.26",
+    "viem": "^2.55.0"
+  }
+}
