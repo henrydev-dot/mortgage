@@ -7,7 +7,6 @@ import {
   Building2,
   ExternalLink,
   Flame,
-  Gamepad2,
   Gift,
   LayoutDashboard,
   Layers,
@@ -30,7 +29,6 @@ const nav = [
   { label: "Escrow agents", href: "/admin/escrow", icon: Scale },
   { label: "Airdrop", href: "/admin/airdrop", icon: Gift },
   { label: "Buy & burn", href: "/admin/burns", icon: Flame },
-  { label: "Tycoon game", href: "/admin/game", icon: Gamepad2 },
   { label: "Waitlist", href: "/admin/emails", icon: Mail },
   { label: "Admin users", href: "/admin/users", icon: Users },
 ];
