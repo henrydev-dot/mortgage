@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 import {
   Building2,
   Flame,
-  Gamepad2,
   Gift,
   Landmark,
   Layers,
@@ -40,10 +39,7 @@ const nav = [
   },
   {
     section: "REWARDS",
-    items: [
-      { label: "Airdrop", href: "/app/airdrop", icon: Gift },
-      { label: "Tycoon Game", href: "/game", icon: Gamepad2 },
-    ],
+    items: [{ label: "Airdrop", href: "/app/airdrop", icon: Gift }],
   },
 ];
 
